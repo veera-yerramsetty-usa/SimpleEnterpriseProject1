@@ -1,0 +1,40 @@
+services:
+  cassandra:
+    image: cassandra:4
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    environment:
+      CASSANDRA_CLUSTER_NAME: SampleCluster
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'describe cluster'"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  cassandra-init:
+    image: cassandra:4
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    entrypoint: >
+      cqlsh cassandra -e "CREATE KEYSPACE IF NOT EXISTS sampledb WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};"
+    restart: "no"
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_CASSANDRA_CONTACT_POINTS: cassandra
+      SPRING_CASSANDRA_PORT: 9042
+      SPRING_CASSANDRA_LOCAL_DATACENTER: datacenter1
+      SPRING_CASSANDRA_KEYSPACE_NAME: sampledb
+      SPRING_CASSANDRA_SCHEMA_ACTION: create-if-not-exists
+    depends_on:
+      cassandra-init:
+        condition: service_completed_successfully
+
+volumes:
+  cassandra-data:
