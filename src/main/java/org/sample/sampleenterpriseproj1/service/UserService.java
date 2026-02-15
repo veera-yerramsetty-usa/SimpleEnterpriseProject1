@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,6 +19,8 @@ public class UserService {
     }
 
     public User createUser(User user) {
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 
@@ -38,6 +41,7 @@ public class UserService {
         user.setPhone(userDetails.getPhone());
         user.setAddress(userDetails.getAddress());
         user.setRole(userDetails.getRole());
+        user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);
     }
 

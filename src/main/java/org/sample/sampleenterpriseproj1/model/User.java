@@ -1,16 +1,18 @@
 package org.sample.sampleenterpriseproj1.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Node;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Node("User")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @NotBlank
@@ -18,7 +20,6 @@ public class User {
 
     @NotBlank
     @Email
-    @Column(unique = true)
     private String email;
 
     @NotBlank
@@ -33,17 +34,6 @@ public class User {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
 
     public Long getId() {
         return id;
