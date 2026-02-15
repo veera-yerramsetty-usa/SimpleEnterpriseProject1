@@ -1,7 +1,9 @@
 package org.sample.sampleenterpriseproj1.repository;
 
 import org.sample.sampleenterpriseproj1.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.cassandra.repository.CassandraRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+import java.util.UUID;
+
+public interface UserRepository extends CassandraRepository<User, UUID> {
 }

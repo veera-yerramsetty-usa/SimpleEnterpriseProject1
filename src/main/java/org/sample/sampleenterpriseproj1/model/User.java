@@ -1,24 +1,24 @@
 package org.sample.sampleenterpriseproj1.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-@Entity
-@Table(name = "users")
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Table("users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @PrimaryKey
+    private UUID id;
 
     @NotBlank
     private String name;
 
     @NotBlank
     @Email
-    @Column(unique = true)
     private String email;
 
     @NotBlank
@@ -34,22 +34,11 @@ public class User {
 
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
