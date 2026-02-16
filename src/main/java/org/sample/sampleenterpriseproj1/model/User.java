@@ -1,55 +1,53 @@
 package org.sample.sampleenterpriseproj1.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+@Document(indexName = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @NotBlank
+    @Field(type = FieldType.Text)
     private String name;
 
     @NotBlank
     @Email
-    @Column(unique = true)
+    @Field(type = FieldType.Keyword)
     private String email;
 
     @NotBlank
+    @Field(type = FieldType.Text)
     private String password;
 
+    @Field(type = FieldType.Text)
     private String phone;
 
+    @Field(type = FieldType.Text)
     private String address;
 
+    @Field(type = FieldType.Keyword)
     private String role;
 
+    @Field(type = FieldType.Date)
     private LocalDateTime createdAt;
 
+    @Field(type = FieldType.Date)
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
