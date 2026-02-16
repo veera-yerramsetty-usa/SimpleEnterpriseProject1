@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PINECONE_API_KEY: ${PINECONE_API_KEY:-your-pinecone-api-key}
+      PINECONE_INDEX_NAME: ${PINECONE_INDEX_NAME:-users}
