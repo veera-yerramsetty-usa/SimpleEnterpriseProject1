@@ -1,55 +1,58 @@
 package org.sample.sampleenterpriseproj1.model;
 
-import jakarta.persistence.*;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+import java.time.Instant;
+
+@Measurement(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(tag = true)
+    private String id;
 
     @NotBlank
+    @Column
     private String name;
 
     @NotBlank
     @Email
-    @Column(unique = true)
+    @Column(tag = true)
     private String email;
 
     @NotBlank
+    @Column
     private String password;
 
+    @Column
     private String phone;
 
+    @Column
     private String address;
 
+    @Column(tag = true)
     private String role;
 
-    private LocalDateTime createdAt;
+    @Column(timestamp = true)
+    private Instant time;
 
-    private LocalDateTime updatedAt;
+    @Column
+    private String createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
+    @Column
+    private String updatedAt;
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    // Dummy field required by InfluxDB (at least one non-tag, non-timestamp field)
+    @Column
+    private long version = 1L;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -101,19 +104,35 @@ public class User {
         this.role = role;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getTime() {
+        return time;
+    }
+
+    public void setTime(Instant time) {
+        this.time = time;
+    }
+
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }
