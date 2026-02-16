@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -18,10 +20,14 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        return userRepository.save(user);
+        user.setId(UUID.randomUUID().toString());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+        return user;
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + id));
     }
@@ -30,7 +36,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUser(Long id, User userDetails) {
+    public User updateUser(String id, User userDetails) {
         User user = getUserById(id);
         user.setName(userDetails.getName());
         user.setEmail(userDetails.getEmail());
@@ -38,11 +44,13 @@ public class UserService {
         user.setPhone(userDetails.getPhone());
         user.setAddress(userDetails.getAddress());
         user.setRole(userDetails.getRole());
-        return userRepository.save(user);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+        return user;
     }
 
-    public void deleteUser(Long id) {
-        User user = getUserById(id);
-        userRepository.delete(user);
+    public void deleteUser(String id) {
+        getUserById(id);
+        userRepository.deleteById(id);
     }
 }
